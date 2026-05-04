@@ -2,32 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Multi Three.js</title>
+<title>Three.js Demo Viewer</title>
 
-<style>
-  body {
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-    background: black;
-  }
-
-  iframe {
-    width: 100%;
-    height: 400px;
-    border: 2px solid white;
-  }
-</style>
+<link rel="stylesheet" href="assets/css/styles.css">
 
 </head>
 
 <body>
 
-<iframe src="demos/webgl_geometry_minecraft.html"></iframe>
-<iframe src="demos/misc_controls_map.html"></iframe>
-<iframe src="demos/misc_controls_orbit.html"></iframe>
-<iframe src="demos/misc_controls_transform.html"></iframe>
+<!-- 🔷 NAVBAR -->
+<header class="navbar">
+  <h2>3.3 Manipulación de escenarios 3D</h2>
+</header>
+
+<!-- 🔷 CONTENIDO -->
+<main class="main">
+
+  <!-- MENÚ -->
+  <aside id="menu">
+    <button onclick="loadDemo('webgl_geometry_minecraft.html')">Minecraft</button>
+    <button onclick="loadDemo('misc_controls_map.html')">Map</button>
+    <button onclick="loadDemo('misc_controls_orbit.html')">Orbit</button>
+    <button onclick="loadDemo('misc_controls_transform.html')">Transform</button>
+    <button class="play" onclick="loadDemo('misc_controls_pointerlock.html')">🎮 PointerLock</button>
+  </aside>
+
+  <!-- VISOR -->
+  <section id="viewer-container">
+    <iframe id="viewer" src="demos/webgl_geometry_minecraft.html" allow="pointer-lock"></iframe>
+  </section>
+
+</main>
+
+<!-- 🔷 FOOTER -->
+<footer class="footer">
+  <p><strong>Desarrollado por:</strong> Roman Resendiz 💻</p>
+  <p><strong>Carrera:</strong> Ingeniería en Sistemas Computacionales</p>
+  <p><strong>Maestro:</strong> Pinedo Fernandez Victor Manuel</p>
+  <p><strong>Materia:</strong> Graficación</p>
+</footer>
+
+<script type="module">
+
+const iframe = document.getElementById("viewer");
+
+/* 🔥 bloquear scroll SIN afectar layout */
+function disableScroll(e) {
+  e.preventDefault();
+}
+
+/* 🟢 SOLO bloquear rueda del mouse cuando estás en iframe */
+iframe.addEventListener("mouseenter", () => {
+  window.addEventListener("wheel", disableScroll, { passive: false });
+});
+
+iframe.addEventListener("mouseleave", () => {
+  window.removeEventListener("wheel", disableScroll);
+});
+
+/* 🔵 bloquear teclas SOLO cuando el iframe está activo */
+let inside = false;
+
+iframe.addEventListener("mouseenter", () => inside = true);
+iframe.addEventListener("mouseleave", () => inside = false);
+
+window.addEventListener("keydown", function(e){
+  const keys = ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"];
+
+  if(inside && keys.includes(e.code)){
+    e.preventDefault();
+  }
+});
+
+/* 🔄 cambiar demo */
+function loadDemo(file){
+  iframe.src = "demos/" + file;
+}
+
+window.loadDemo = loadDemo;
+
+</script>
 
 </body>
 </html>
